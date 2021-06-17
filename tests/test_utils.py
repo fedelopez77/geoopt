@@ -30,7 +30,7 @@ def test_qr(A):
     q, r = geoopt.linalg.qr(A)
     with torch.no_grad():
         for i, a in enumerate(A):
-            qt, rt = torch.qr(a)
+            qt, rt = geoopt.linalg.qr(a)
             np.testing.assert_allclose(q.detach()[i], qt.detach())
             np.testing.assert_allclose(r.detach()[i], rt.detach())
 

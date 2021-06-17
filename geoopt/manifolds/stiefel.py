@@ -179,7 +179,7 @@ class CanonicalStiefel(Stiefel):
         rhs = v + 1 / 2 * a @ v
         lhs = -1 / 2 * a
         lhs[..., torch.arange(a.shape[-2]), torch.arange(x.shape[-2])] += 1
-        qv, _ = torch.solve(rhs, lhs)
+        qv = linalg.solve(rhs, lhs)
         return qv
 
     def transp_follow_retr(

@@ -43,7 +43,7 @@ def canonical_stiefel_case():
     shape = manifold_shapes[geoopt.manifolds.CanonicalStiefel]
     ex = torch.randn(*shape)
     ev = torch.randn(*shape)
-    u, _, v = torch.svd(ex)
+    u, _, v = geoopt.linalg.svd(ex)
     x = u @ v.t()
     v = ev - x @ ev.t() @ x
     manifold = geoopt.manifolds.CanonicalStiefel()
@@ -57,7 +57,7 @@ def euclidean_stiefel_case():
     shape = manifold_shapes[geoopt.manifolds.EuclideanStiefel]
     ex = torch.randn(*shape, dtype=torch.float64)
     ev = torch.randn(*shape, dtype=torch.float64)
-    u, _, v = torch.svd(ex)
+    u, _, v = geoopt.linalg.svd(ex)
     x = u @ v.t()
     nonsym = x.t() @ ev
     v = ev - x @ (nonsym + nonsym.t()) / 2
@@ -99,7 +99,7 @@ def proju_original(x, u):
         dim=1,
     )
 
-    zeta, _ = torch.solve(B.transpose(1, 2) @ (b - A[:, :, 0:1]), B.transpose(1, 2) @ B)
+    zeta = linalg.solve(B.transpose(1, 2) @ (b - A[:, :, 0:1]), B.transpose(1, 2) @ B)
     alpha = torch.cat(
         [torch.ones(batch_size, 1, 1, dtype=x.dtype), zeta[:, 0 : n - 1]], dim=1
     )

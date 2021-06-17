@@ -4,6 +4,12 @@
 
 import torch.jit
 
+torch_version = torch.__version__
+if torch_version < "1.9.0":
+    def solve(b: torch.Tensor, a: torch.Tensor) -> torch.Tensor: return torch.solve(b, a).solution
+else:   # pytorch version >= 1.9
+    def solve(b: torch.Tensor, a: torch.Tensor) -> torch.Tensor: return torch.linalg.solve(a, b)
+
 
 @torch.jit.script
 def torch_pade13(A):  # pragma: no cover
@@ -73,6 +79,6 @@ def expm_one(A):  # pragma: no cover
     P = U + V
     Q = -U + V
 
-    R, _ = torch.solve(P, Q)  # solve P = Q*R
+    R = solve(P, Q)  # solve P = Q*R
     expmA = matrix_2_power(R, n_squarings)
     return expmA
